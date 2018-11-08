@@ -19,4 +19,5 @@ def solver(G, k, s, L): #k = number of buses, s = capacity of buses
             if numfriendssorted is not empty and
 
 
+
     #write solution list to a file
