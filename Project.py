@@ -15,7 +15,7 @@ from string import ascii_lowercase
 
 
 G = nx.Graph()
-
+smallG = nx.Graph()
 
 # In[11]:
 
@@ -73,15 +73,13 @@ addEdges(G, vertices)
 # In[14]:
 
 
-# print(G.nodes, G.edges)
-# print(randNames(10))
-
 def addVerticesFromList(lst):
     for i in lst:
         G.add_node(i)
 
 #SmallInput creation: 30 people, k = 3, s = 10
-def smallInput(): 
+def smallInputSolution(): 
+    
     #initialize buses
     busOne, busTwo, busThree = [], [], []
     for i in range(0, 10):
@@ -99,11 +97,19 @@ def smallInput():
     #maximally connects students within each bus
     for i in range(0, 9):
         for j in range(1, 10):
-            G.add_edge(busOne[i], busOne[j])
-            G.add_edge(busTwo[i], busTwo[j])
-            G.add_edge(busThree[i], busThree[j])
+            smallG.add_edge(busOne[i], busOne[j])
+            smallG.add_edge(busTwo[i], busTwo[j])
+            smallG.add_edge(busThree[i], busThree[j])
 
-smallInput();
+    f = open("small.out", "w")
+    f.write("{} \n".format(busOne))
+    f.write("{} \n".format(busTwo))
+    f.write("{} \n".format(busThree))
+
+smallInputSolution()
+
+def smallInput():
+    f = open("")
 
 # In[20]:
 
