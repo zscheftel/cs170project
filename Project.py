@@ -81,9 +81,9 @@ addEdges(G, vertices)
 # In[14]:
 
 
-def addVerticesFromList(lst):
+def addVerticesFromList(graph, lst):
     for i in lst:
-        G.add_node(i)
+        graph.add_node(i)
 
 #adds friendships from the ith student in bus one to the (i + 3)nd student in bus two
 def addDiagonalFriendships(graph, buses):
@@ -153,9 +153,9 @@ def smallInputSolution():
     smallBuses = [busOne, busTwo, busThree]
 
     #add vertices to graph
-    addVerticesFromList(busOne)
-    addVerticesFromList(busTwo)
-    addVerticesFromList(busThree)
+    addVerticesFromList(smallG, busOne)
+    addVerticesFromList(smallG, busTwo)
+    addVerticesFromList(smallG, busThree)
 
     #adds friendship between the two vertices in first bus
     smallG.add_edge(busOne[0], busOne[1])
@@ -220,9 +220,9 @@ def mediumInputSolution():
     mediumBuses = [busOne, busTwo, busThree]
 
     #add vertices to graph
-    addVerticesFromList(busOne)
-    addVerticesFromList(busTwo)
-    addVerticesFromList(busThree)
+    addVerticesFromList(mediumG, busOne)
+    addVerticesFromList(mediumG, busTwo)
+    addVerticesFromList(mediumG, busThree)
 
     #adds friendship between the two vertices in first bus
     mediumG.add_edge(busOne[0], busOne[1])
@@ -286,9 +286,9 @@ def largeInputSolution():
     largeBuses = [busOne, busTwo, busThree]
 
     #add vertices to graph
-    addVerticesFromList(busOne)
-    addVerticesFromList(busTwo)
-    addVerticesFromList(busThree)
+    addVerticesFromList(largeG, busOne)
+    addVerticesFromList(largeG, busTwo)
+    addVerticesFromList(largeG, busThree)
 
     #adds friendship between the two vertices in first bus
     largeG.add_edge(busOne[0], busOne[1])
