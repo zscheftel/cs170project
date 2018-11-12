@@ -7,7 +7,8 @@
 import networkx as nx
 import numpy as np
 import math
-from random import choices, randint
+import random
+from random import choices, randint, shuffle
 from string import ascii_lowercase
 
 
@@ -17,6 +18,12 @@ from string import ascii_lowercase
 G = nx.Graph()
 smallG = nx.Graph()
 smallBuses = []
+
+mediumG = nx.Graph()
+mediumBuses = []
+
+largeG = nx.Graph()
+largeBuses = []
 
 # In[11]:
 
@@ -88,7 +95,7 @@ def addDiagonalFriendships(graph, buses):
 
 def makeRowdyAB(busList):
     rowdy = []
-    f = open("small/parameters.txt", "w")
+    f = open("inputs/small/parameters.txt", "w")
 
     for i in busList[0]:
         for j in range(1, len(busList)):
@@ -99,7 +106,7 @@ def makeRowdyAB(busList):
 
 def smallInput(buses):
     #initialize input file
-    f = open("small/parameters.txt", "w")
+    f = open("inputs/small/parameters.txt", "w")
     k = 3
     s = 12
     f.write(str(k) + "\n" + str(s) + "\n")
@@ -123,6 +130,8 @@ def smallInput(buses):
         #otherwise do it
         else:
             rowdy += [[buses[2][i], buses[1][0]]]
+
+    random.shuffle(rowdy)
 
     for group in rowdy:
         f.write("{}".format(group) + "\n")
@@ -154,21 +163,153 @@ def smallInputSolution():
     #adds diagonal friendships between buses two and three
     addDiagonalFriendships(smallG, smallBuses)
 
-    f = open("small.out", "w")
+    f = open("outputs/small.out", "w")
     f.write("{} \n".format(busOne))
     f.write("{} \n".format(busTwo))
     f.write("{} \n".format(busThree))
 
     smallInput(smallBuses)
-    nx.write_gml(smallG, "small/graph.gml")
+    nx.write_gml(smallG, "inputs/small/graph.gml")
 
     f.close()
 
-smallInputSolution()
 
 
 
+def mediumInput(buses):
+    f = open("inputs/medium/parameters.txt", "w")
+    k = 3
+    s = 124
+    f.write(str(k) + "\n" + str(s) + "\n")
+
+    rowdy = []
+
+    for i in buses[0]:
+        for j in buses[1]:
+            rowdy += [[i, j]]
+        for k in buses[2]:
+            rowdy += [[i, k]]
+    # rowdy += [makeRowdyAB(buses)]
+
+    #horizontal and diagonal rowdyness
+    for i in range(0, len(buses[1])):
+        #for horizontal rowdy groups
+        rowdy += [[buses[1][i], buses[2][i]]]
+        #if don't have to make rowdy from end of one list to start of another
+        if (i < len(buses) - 1):
+            rowdy += [[buses[2][i], buses[1][i + 1]]]
+        #otherwise do it
+        else:
+            rowdy += [[buses[2][i], buses[1][0]]]
+    random.shuffle(rowdy)
+
+    for group in rowdy:
+        f.write("{}".format(group) + "\n")
+
+    f.close()
+
+def mediumInputSolution():
+    busOne, busTwo, busThree = [], [], []
+    for i in range(0, 2):
+        busOne += [str(i)]
+    for i in range(2, 126):
+        busTwo += [str(i)]
+    for i in range(126, 250):
+        busThree += [str(i)]
+
+    mediumBuses = [busOne, busTwo, busThree]
+
+    #add vertices to graph
+    addVerticesFromList(busOne)
+    addVerticesFromList(busTwo)
+    addVerticesFromList(busThree)
+
+    #adds friendship between the two vertices in first bus
+    mediumG.add_edge(busOne[0], busOne[1])
+
+    #adds diagonal friendships between buses two and three
+    addDiagonalFriendships(mediumG, mediumBuses)
+
+    f = open("outputs/medium.out", "w")
+    f.write("{} \n".format(busOne))
+    f.write("{} \n".format(busTwo))
+    f.write("{} \n".format(busThree))
+
+    mediumInput(mediumBuses)
+    nx.write_gml(mediumG, "inputs/medium/graph.gml")
+
+    f.close()
+
+def largeInput(buses):
+    f = open("inputs/large/parameters.txt", "w")
+    k = 3
+    s = 249
+    f.write(str(k) + "\n" + str(s) + "\n")
+
+    rowdy = []
+
+    for i in buses[0]:
+        for j in buses[1]:
+            rowdy += [[i, j]]
+        for k in buses[2]:
+            rowdy += [[i, k]]
+    # rowdy += [makeRowdyAB(buses)]
+
+    #horizontal and diagonal rowdyness
+    for i in range(0, len(buses[1])):
+        #for horizontal rowdy groups
+        rowdy += [[buses[1][i], buses[2][i]]]
+        #if don't have to make rowdy from end of one list to start of another
+        if (i < len(buses) - 1):
+            rowdy += [[buses[2][i], buses[1][i + 1]]]
+        #otherwise do it
+        else:
+            rowdy += [[buses[2][i], buses[1][0]]]
+
+    random.shuffle(rowdy)
+
+    for group in rowdy:
+        f.write("{}".format(group) + "\n")
+
+    f.close()
+
+
+def largeInputSolution():
+    busOne, busTwo, busThree = [], [], []
+    for i in range(0, 2):
+        busOne += [str(i)]
+    for i in range(2, 251):
+        busTwo += [str(i)]
+    for i in range(251, 500):
+        busThree += [str(i)]
+
+    largeBuses = [busOne, busTwo, busThree]
+
+    #add vertices to graph
+    addVerticesFromList(busOne)
+    addVerticesFromList(busTwo)
+    addVerticesFromList(busThree)
+
+    #adds friendship between the two vertices in first bus
+    largeG.add_edge(busOne[0], busOne[1])
+
+    #adds diagonal friendships between buses two and three
+    addDiagonalFriendships(largeG, largeBuses)
+
+    f = open("outputs/large.out", "w")
+    f.write("{} \n".format(busOne))
+    f.write("{} \n".format(busTwo))
+    f.write("{} \n".format(busThree))
+
+    largeInput(largeBuses)
+    nx.write_gml(largeG, "inputs/large/graph.gml")
+
+    f.close()
 # In[20]:
+
+smallInputSolution()
+mediumInputSolution()
+largeInputSolution()
 
 
 def createInput(n, size):
