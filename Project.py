@@ -16,6 +16,7 @@ from string import ascii_lowercase
 
 G = nx.Graph()
 smallG = nx.Graph()
+smallBuses = []
 
 # In[11]:
 
@@ -77,39 +78,95 @@ def addVerticesFromList(lst):
     for i in lst:
         G.add_node(i)
 
-#SmallInput creation: 30 people, k = 3, s = 10
+#adds friendships from the ith student in bus one to the (i + 3)nd student in bus two
+def addDiagonalFriendships(graph, buses):
+    busCapacity = len(buses[1])
+    for i in range(0, busCapacity - 1):
+        graph.add_edge(buses[1][i], buses[2][i + 1])
+    graph.add_edge(buses[1][busCapacity - 1], buses[2][0])
+
+
+def makeRowdyAB(busList):
+    rowdy = []
+    f = open("small/parameters.txt", "w")
+
+    for i in busList[0]:
+        for j in range(1, len(busList)):
+            for k in busList[j]:
+                f.write("{}".format([i, k]) + "\n")
+    return rowdy
+
+
+def smallInput(buses):
+    #initialize input file
+    f = open("small/parameters.txt", "w")
+    k = 3
+    s = 12
+    f.write(str(k) + "\n" + str(s) + "\n")
+
+    rowdy = []
+
+    for i in buses[0]:
+        for j in buses[1]:
+            rowdy += [[i, j]]
+        for k in buses[2]:
+            rowdy += [[i, k]]
+    # rowdy += [makeRowdyAB(buses)]
+
+    #horizontal and diagonal rowdyness
+    for i in range(0, len(buses[1])):
+        #for horizontal rowdy groups
+        rowdy += [[buses[1][i], buses[2][i]]]
+        #if don't have to make rowdy from end of one list to start of another
+        if (i < len(buses) - 1):
+            rowdy += [[buses[2][i], buses[1][i + 1]]]
+        #otherwise do it
+        else:
+            rowdy += [[buses[2][i], buses[1][0]]]
+
+    for group in rowdy:
+        f.write("{}".format(group) + "\n")
+
+    f.close()
+
+#SmallInput creation: 26 people, k = 3, s = 10
 def smallInputSolution(): 
     
-    #initialize buses
+    #initialize buses, one bus has two people, rest have 12 each of invalid vertices
     busOne, busTwo, busThree = [], [], []
-    for i in range(0, 10):
+    for i in range(0, 2):
         busOne += [str(i)]
-    for i in range(10, 20):
+    for i in range(2, 14):
         busTwo += [str(i)]
-    for i in range(20, 30):
+    for i in range(14, 26):
         busThree += [str(i)]
+
+    smallBuses = [busOne, busTwo, busThree]
 
     #add vertices to graph
     addVerticesFromList(busOne)
     addVerticesFromList(busTwo)
     addVerticesFromList(busThree)
 
-    #maximally connects students within each bus
-    for i in range(0, 9):
-        for j in range(1, 10):
-            smallG.add_edge(busOne[i], busOne[j])
-            smallG.add_edge(busTwo[i], busTwo[j])
-            smallG.add_edge(busThree[i], busThree[j])
+    #adds friendship between the two vertices in first bus
+    smallG.add_edge(busOne[0], busOne[1])
+
+    #adds diagonal friendships between buses two and three
+    addDiagonalFriendships(smallG, smallBuses)
 
     f = open("small.out", "w")
     f.write("{} \n".format(busOne))
     f.write("{} \n".format(busTwo))
     f.write("{} \n".format(busThree))
 
+    smallInput(smallBuses)
+    nx.write_gml(smallG, "small/graph.gml")
+
+    f.close()
+
 smallInputSolution()
 
-def smallInput():
-    f = open("")
+
 
 # In[20]:
 
