@@ -1,0 +1,4 @@
+k = __ //number of buses
+c = __ //capacity of bus
+solution = []
+def solver(lst, )

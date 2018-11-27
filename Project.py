@@ -176,23 +176,6 @@ def smallInputSolution():
     for i in range(len(busThree) - 1):
          f.write(str(busThree[i])+", ")
     f.write(str(busThree[-1]) + "]\n")
-    # for i in range(len(busOne)):
-    #     if i == len(busOne) - 1:
-    #         f.write(str(busOne[i]))
-    #     else:
-    #         f.write(str(busOne[i]) + " ")
-    # f.write("\n")
-    # for i in range(len(busTwo)):
-    #     if i == len(busTwo) - 1:
-    #         f.write(str(busTwo[i]))
-    #     else:
-    #         f.write(str(busTwo[i]) + " ")
-    # f.write("\n")
-    # for i in range(len(busThree)):
-    #     if i == len(busThree) - 1:
-    #         f.write(str(busThree[i]))
-    #     else:
-    #         f.write(str(busThree[i]) + " ")
 
     smallInput(smallBuses)
     nx.write_gml(smallG, "inputs/small/graph.gml")
@@ -269,24 +252,6 @@ def mediumInputSolution():
     for i in range(len(busThree) - 1):
          f.write(str(busThree[i])+", ")
     f.write(str(busThree[-1]) + "]\n")
-    # for i in range(len(busOne)):
-    #     if i == len(busOne) - 1:
-    #         f.write(str(busOne[i]))
-    #     else:
-    #         f.write(str(busOne[i]) + " ")
-    # f.write("\n")
-    # for i in range(len(busTwo)):
-    #     if i == len(busTwo) - 1:
-    #         f.write(str(busTwo[i]))
-    #     else:
-    #         f.write(str(busTwo[i]) + " ")
-    # f.write("\n")
-    # for i in range(len(busThree)):
-    #     if i == len(busThree) - 1:
-    #         f.write(str(busThree[i]))
-    #     else:
-    #         f.write(str(busThree[i]) + " ")
-    # f.write("\n")
 
     mediumInput(mediumBuses)
     nx.write_gml(mediumG, "inputs/medium/graph.gml")
@@ -362,24 +327,6 @@ def largeInputSolution():
     for i in range(len(busThree) - 1):
          f.write(str(busThree[i])+", ")
     f.write(str(busThree[-1]) + "]\n")
-    # for i in range(len(busOne)):
-    #     if i == len(busOne) - 1:
-    #         f.write(str(busOne[i]))
-    #     else:
-    #         f.write(str(busOne[i]) + " ")
-    # f.write("\n")
-    # for i in range(len(busTwo)):
-    #     if i == len(busTwo) - 1:
-    #         f.write(str(busTwo[i]))
-    #     else:
-    #         f.write(str(busTwo[i]) + " ")
-    # f.write("\n")
-    # for i in range(len(busThree)):
-    #     if i == len(busThree) - 1:
-    #         f.write(str(busThree[i]))
-    #     else:
-    #         f.write(str(busThree[i]) + " ")
-    # f.write("\n")
 
     largeInput(largeBuses)
     nx.write_gml(largeG, "inputs/large/graph.gml")
