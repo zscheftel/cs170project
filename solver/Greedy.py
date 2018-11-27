@@ -1,6 +1,6 @@
 import networkx as nx
 solution = []
-def solver(G, k, s, L, filename): #k = number of buses, s = capacity of buses, L = list of lists of rowdy groups
+def solver(G, k, s, L): #k = number of buses, s = capacity of buses, L = list of lists of rowdy groups
     #adjlist is a list of strings
     adjlist = nx.generate_adjlist(G)
     #find kid w/ max # of friends
@@ -32,14 +32,8 @@ def solver(G, k, s, L, filename): #k = number of buses, s = capacity of buses, L
                 numFriendsSorted.remove(maxStudent)
 
         solution.append(bus)
-        createOuputs(filename)
 
-def createOutputs(filename):
-    f = open("small/" + filename + ".out", "w")
-    for i in solution:
-        f.write(str(i) + "\n")
-    f.close()
-
+#figure out what to do if you must make a rowdy group
 
 
 
