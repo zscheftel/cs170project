@@ -13,95 +13,95 @@ graph [
   ]
   node [
     id 3
-    label "15"
-  ]
-  node [
-    id 4
     label "3"
   ]
   node [
-    id 5
-    label "16"
-  ]
-  node [
-    id 6
+    id 4
     label "4"
   ]
   node [
-    id 7
-    label "17"
-  ]
-  node [
-    id 8
+    id 5
     label "5"
   ]
   node [
-    id 9
-    label "18"
-  ]
-  node [
-    id 10
+    id 6
     label "6"
   ]
   node [
-    id 11
-    label "19"
-  ]
-  node [
-    id 12
+    id 7
     label "7"
   ]
   node [
-    id 13
-    label "20"
-  ]
-  node [
-    id 14
+    id 8
     label "8"
   ]
   node [
-    id 15
-    label "21"
-  ]
-  node [
-    id 16
+    id 9
     label "9"
   ]
   node [
-    id 17
-    label "22"
-  ]
-  node [
-    id 18
+    id 10
     label "10"
   ]
   node [
-    id 19
-    label "23"
-  ]
-  node [
-    id 20
+    id 11
     label "11"
   ]
   node [
-    id 21
-    label "24"
-  ]
-  node [
-    id 22
+    id 12
     label "12"
   ]
   node [
-    id 23
-    label "25"
-  ]
-  node [
-    id 24
+    id 13
     label "13"
   ]
   node [
-    id 25
+    id 14
     label "14"
+  ]
+  node [
+    id 15
+    label "15"
+  ]
+  node [
+    id 16
+    label "16"
+  ]
+  node [
+    id 17
+    label "17"
+  ]
+  node [
+    id 18
+    label "18"
+  ]
+  node [
+    id 19
+    label "19"
+  ]
+  node [
+    id 20
+    label "20"
+  ]
+  node [
+    id 21
+    label "21"
+  ]
+  node [
+    id 22
+    label "22"
+  ]
+  node [
+    id 23
+    label "23"
+  ]
+  node [
+    id 24
+    label "24"
+  ]
+  node [
+    id 25
+    label "25"
   ]
   edge [
     source 0
@@ -109,50 +109,50 @@ graph [
   ]
   edge [
     source 2
-    target 3
-  ]
-  edge [
-    source 4
-    target 5
-  ]
-  edge [
-    source 6
-    target 7
-  ]
-  edge [
-    source 8
-    target 9
-  ]
-  edge [
-    source 10
-    target 11
-  ]
-  edge [
-    source 12
-    target 13
-  ]
-  edge [
-    source 14
     target 15
   ]
   edge [
-    source 16
+    source 3
+    target 16
+  ]
+  edge [
+    source 4
     target 17
   ]
   edge [
-    source 18
+    source 5
+    target 18
+  ]
+  edge [
+    source 6
     target 19
   ]
   edge [
-    source 20
+    source 7
+    target 20
+  ]
+  edge [
+    source 8
     target 21
   ]
   edge [
-    source 22
+    source 9
+    target 22
+  ]
+  edge [
+    source 10
     target 23
   ]
   edge [
-    source 24
+    source 11
+    target 24
+  ]
+  edge [
+    source 12
     target 25
+  ]
+  edge [
+    source 13
+    target 14
   ]
 ]

@@ -30,11 +30,11 @@ largeBuses = []
 
 def addVertices(G, V):
     G.add_nodes_from(V)
-    
+
 def addEdges(G, V):
     for i in range(math.floor(np.random.random()*len(V)*len(V))):
         addEdge(G)
-        
+
 def addEdge(G):
     gNodes = list(G.nodes)
     lenNodes = len(gNodes)
@@ -59,7 +59,7 @@ def rowdyL(size):
     for i in range(np.random.randint(range(size))):
         l = []
         # for j in range(skewedProb(size)):
-            
+
 def skewedProb(size):
     prob = [0]*size
     for i in range(len(prob)):
@@ -139,8 +139,8 @@ def smallInput(buses):
     f.close()
 
 #SmallInput creation: 26 people, k = 3, s = 10
-def smallInputSolution(): 
-    
+def smallInputSolution():
+
     #initialize buses, one bus has two people, rest have 12 each of invalid vertices
     busOne, busTwo, busThree = [], [], []
     for i in range(0, 2):
@@ -164,9 +164,35 @@ def smallInputSolution():
     addDiagonalFriendships(smallG, smallBuses)
 
     f = open("outputs/small.out", "w")
-    f.write("{} \n".format(busOne))
-    f.write("{} \n".format(busTwo))
-    f.write("{} \n".format(busThree))
+    f.write("[")
+    for i in range(len(busOne) - 1):
+         f.write(str(busOne[i])+", ")
+    f.write(str(busOne[-1]) + "]\n")
+    f.write("[")
+    for i in range(len(busTwo) - 1):
+         f.write(str(busTwo[i])+", ")
+    f.write(str(busTwo[-1]) + "]\n")
+    f.write("[")
+    for i in range(len(busThree) - 1):
+         f.write(str(busThree[i])+", ")
+    f.write(str(busThree[-1]) + "]\n")
+    # for i in range(len(busOne)):
+    #     if i == len(busOne) - 1:
+    #         f.write(str(busOne[i]))
+    #     else:
+    #         f.write(str(busOne[i]) + " ")
+    # f.write("\n")
+    # for i in range(len(busTwo)):
+    #     if i == len(busTwo) - 1:
+    #         f.write(str(busTwo[i]))
+    #     else:
+    #         f.write(str(busTwo[i]) + " ")
+    # f.write("\n")
+    # for i in range(len(busThree)):
+    #     if i == len(busThree) - 1:
+    #         f.write(str(busThree[i]))
+    #     else:
+    #         f.write(str(busThree[i]) + " ")
 
     smallInput(smallBuses)
     nx.write_gml(smallG, "inputs/small/graph.gml")
@@ -231,9 +257,36 @@ def mediumInputSolution():
     addDiagonalFriendships(mediumG, mediumBuses)
 
     f = open("outputs/medium.out", "w")
-    f.write("{} \n".format(busOne))
-    f.write("{} \n".format(busTwo))
-    f.write("{} \n".format(busThree))
+    f.write("[")
+    for i in range(len(busOne) - 1):
+         f.write(str(busOne[i])+", ")
+    f.write(str(busOne[-1]) + "]\n")
+    f.write("[")
+    for i in range(len(busTwo) - 1):
+         f.write(str(busTwo[i])+", ")
+    f.write(str(busTwo[-1]) + "]\n")
+    f.write("[")
+    for i in range(len(busThree) - 1):
+         f.write(str(busThree[i])+", ")
+    f.write(str(busThree[-1]) + "]\n")
+    # for i in range(len(busOne)):
+    #     if i == len(busOne) - 1:
+    #         f.write(str(busOne[i]))
+    #     else:
+    #         f.write(str(busOne[i]) + " ")
+    # f.write("\n")
+    # for i in range(len(busTwo)):
+    #     if i == len(busTwo) - 1:
+    #         f.write(str(busTwo[i]))
+    #     else:
+    #         f.write(str(busTwo[i]) + " ")
+    # f.write("\n")
+    # for i in range(len(busThree)):
+    #     if i == len(busThree) - 1:
+    #         f.write(str(busThree[i]))
+    #     else:
+    #         f.write(str(busThree[i]) + " ")
+    # f.write("\n")
 
     mediumInput(mediumBuses)
     nx.write_gml(mediumG, "inputs/medium/graph.gml")
@@ -297,9 +350,36 @@ def largeInputSolution():
     addDiagonalFriendships(largeG, largeBuses)
 
     f = open("outputs/large.out", "w")
-    f.write("{} \n".format(busOne))
-    f.write("{} \n".format(busTwo))
-    f.write("{} \n".format(busThree))
+    f.write("[")
+    for i in range(len(busOne) - 1):
+         f.write(str(busOne[i])+", ")
+    f.write(str(busOne[-1]) + "]\n")
+    f.write("[")
+    for i in range(len(busTwo) - 1):
+         f.write(str(busTwo[i])+", ")
+    f.write(str(busTwo[-1]) + "]\n")
+    f.write("[")
+    for i in range(len(busThree) - 1):
+         f.write(str(busThree[i])+", ")
+    f.write(str(busThree[-1]) + "]\n")
+    # for i in range(len(busOne)):
+    #     if i == len(busOne) - 1:
+    #         f.write(str(busOne[i]))
+    #     else:
+    #         f.write(str(busOne[i]) + " ")
+    # f.write("\n")
+    # for i in range(len(busTwo)):
+    #     if i == len(busTwo) - 1:
+    #         f.write(str(busTwo[i]))
+    #     else:
+    #         f.write(str(busTwo[i]) + " ")
+    # f.write("\n")
+    # for i in range(len(busThree)):
+    #     if i == len(busThree) - 1:
+    #         f.write(str(busThree[i]))
+    #     else:
+    #         f.write(str(busThree[i]) + " ")
+    # f.write("\n")
 
     largeInput(largeBuses)
     nx.write_gml(largeG, "inputs/large/graph.gml")
@@ -336,7 +416,3 @@ def createInput(n, size):
 
 
 # In[ ]:
-
-
-
-
