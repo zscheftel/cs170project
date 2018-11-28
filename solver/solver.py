@@ -3,33 +3,6 @@ import networkx as nx
 path = "/../inputs/"
 solution = []
 
-for folder in os.listdir(path):
-    for filename in os.listdir(folder):
-        G = None
-        k = None
-        s = None
-        rG = []
-
-        if filename.endswith(".gml"):
-            G = nx.read_gml(filename)
-        elif filename.endswith(".txt"):
-            file = open(filename, 'r')
-            lines = file.readlines()
-            k = lines[0]
-            s = lines[1]
-            rG.extend(lines[2:])
-            file.close()
-
-        rG_sets = [set(x) for x in rG]
-
-        #Call solver function to write to solution global var
-        solver(G, k, s, rG)
-
-        #Write output files based on solution
-        createOuputs(filename)
-
-        #Print score for this solution
-        scoreSolution(G, rG_sets)
 
 #writes solution to output files
 def createOutputs(filename):
@@ -62,3 +35,32 @@ def scoreSolution(G, rG_sets):
                             score += 1
                             
     print(score)
+
+
+for folder in os.listdir(path):
+    for filename in os.listdir(folder):
+        G = None
+        k = None
+        s = None
+        rG = []
+
+        if filename.endswith(".gml"):
+            G = nx.read_gml(filename)
+        elif filename.endswith(".txt"):
+            file = open(filename, 'r')
+            lines = file.readlines()
+            k = lines[0]
+            s = lines[1]
+            rG.extend(lines[2:])
+            file.close()
+
+        rG_sets = [set(x) for x in rG]
+
+        #Call solver function to write to solution global var
+        solver(G, k, s, rG)
+
+        #Write output files based on solution
+        createOutputs(filename)
+
+        #Print score for this solution
+        scoreSolution(G, rG_sets)
