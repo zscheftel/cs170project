@@ -4,13 +4,12 @@ import random
 def solver(G, k, s, rG, filename):
 
     def randomized():
-        edgeList = list(G.edges)
-        nodeList = list(G.nodes)
         buses = [[] for i in range(k)]
         rG_sets = [set(x) for x in rG]
+        counter = len(nodeList) // 10
 
         def createSupernode(v1, v2):
-            superName = str(v1) + ", " + str(v2)
+            superName = str(v1) + "," + str(v2)
             G.add_node(superName)
             friendsToAdd = {}
             for friend in G.adj[v1]:
@@ -22,40 +21,54 @@ def solver(G, k, s, rG, filename):
             G.remove_node(v2)
             return superName
 
-        while len(list(G.nodes)) > k: #try to create supernodes by combining edge members
+        while counter > 0: #try to create supernodes by combining edge members
 
+            edgeList = list(G.edges)
             randEdge = edgeList[random.randint(len(edgeList)))] #Find random edge
 
             v1 = randEdge[0]
+            sizeV1 = len(",".split(v1))
             v2 = randEdge[1]
-            placed = False
+            sizeV2 = len(",".split(v2))
 
-            randomIndices = [i for i in range(len(buses))] #randomize buses to try to add to
-            random.shuffle(x)
-
-            for index in randomIndices: #try to add nodes to each bus
-                if (len(buses[index]) + 2 > s): #overfull bus
-                    continue
-                tempBus = buses[index][:].extend([v1, v2])
-                subset = False
-                for rG_set in rG_sets: #check if a rowdy group is created
-                    if all(x in tempBus for x in rG_set):
-                        subset = True
-                        break
-                if subset:
-                    continue
-
-                buses[index] = tempBus #add the students
-                placed = True
-                break
-                #score += 1
-
-            if not placed:
+            #try to add nodes to each bus
+            if (sizeV1 + sizeV2 > s): #overfull bus
+                counter -= 1
                 continue
 
+            subset = False
+
+            for rG_set in rG_sets: #check if a rowdy group is created
+                if all(x in ",".split(v1+v2) for x in rG_set):
+                    subset = True
+                    break
+            if subset:
+                counter -= 1
+                continue
+
+            counter = len(nodeList) // 10
             createSupernode(v1, v2)
 
-        if len(nodeList != 0): #if we have leftover nodes, we must place them
+        if len(nodeList) != k: #if we have leftover nodes, we must place them
+            lonelyBoiz = [x for x in list(G.nodes) if len(",".split(x)) == 1]
+            superNodes = [x for x in list(G.nodes) if len(",".split(x)) > 1]
+
+            currStudentCount = [[i, len(",".split(superNodes[i]))] for i in len(superNodes)]
+
+            def sizeSecond(lst):
+                return lst[1]
+            currStudentCount.sort(key=sizeSecond)
+
+            currNode = 0
+            for boi in lonelyBoiz:
+                if len(",".split(superNodes[currNode])) > s:
+                    currNode += 1
+                else:
+                    createSupernode(boi, superNodes[currNode])
+
+        buses = [",".split(x) for x in list(G.nodes)]
+        return buses
+
 
 
 
