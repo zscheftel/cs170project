@@ -8,9 +8,12 @@ p = os.getcwd()
 
 # to test for different input sizes, just set the size you want to True
 # eg. if I want to test the medium sized inputs, set only medium = True
-small = True
+small = False
 medium = False
-large = False
+large = True
+
+global counter
+counter = 1
 
 if small:
     inputsSize = "small/"
@@ -20,7 +23,7 @@ elif large:
     inputsSize = "large/"
 
 path = p + "/all_inputs/" + inputsSize
-
+outputPath = p + "/outputs/" + inputsSize
 # for testing purposes
 # path = p + "/all_inputs/small/1/"
 
@@ -28,7 +31,7 @@ solution = []
 
 #writes solution to output files
 def createOutputs(filename, num, solution):
-    f = open(filename + "/" + num + ".out", "w")
+    f = open(filename + num + ".out", "w")
     for i in solution:
         f.write(str(i) + "\n")
     f.close()
@@ -154,10 +157,14 @@ for folder in os.listdir(path):
             solution = solver(G, k, s, rG)
 
             #Write output files based on solution
-            createOutputs(os.getcwd() + "/outputs", folder, solution)
+            createOutputs(outputPath, folder, solution)
 
             #Print score for this solution
-            print(score_output(path + folder, p + "/outputs/" + folder + ".out"))
+            # print(score_output(path + folder, outputPath + folder + ".out"))
+
+            #Print counter of how many we've processed
+            print(counter)
+            counter += 1
 
 
 # # FOR TESTING A SINGLE INPUT
