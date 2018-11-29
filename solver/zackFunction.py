@@ -177,13 +177,16 @@ def solver(graph, k, s, rG, filename):
                     currStudentCount.sort(key=sizeSecond)
 
                     curr = 0
-                    for rG_set in rG_sets: #check if a rowdy group is created
-                        temp = superNodes[currStudentCount[curr][0]] + "," + boi
-                        if all(x in (temp).split(',') for x in rG_set):
-                            curr += 1
+                    for i in range(len(superNodes)):
+                        subset = False
+                        for rG_set in rG_sets: #check if a rowdy group is created
+                            temp = superNodes[currStudentCount[i][0]] + "," + boi
+                            if all(x in (temp).split(',') for x in rG_set):
+                                subset = True
+                                break
+                        if not subset:
+                            curr = i
                             break
-
-
                     createSupernode(boi, superNodes[currStudentCount[curr][0]])
 
         while len(list(G.nodes)) > k: #try to create supernodes by combining edge members
