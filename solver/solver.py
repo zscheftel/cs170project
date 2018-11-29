@@ -5,6 +5,9 @@ from pathlib import Path
 import ast
 
 p = os.getcwd()
+
+# to test for different input sizes, just set the size you want to True
+# eg. if I want to test the medium sized inputs, set only medium = True
 small = True
 medium = False
 large = False
