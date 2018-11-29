@@ -41,10 +41,10 @@ def solver(G, k, s, L):
 	#initialize buses list
 	buses = []
 	currBus = 0 #counter for which bus you're currently trying to add to
+	emptyBuses = k
 	for i in range(0, k):
 		bus = []
 		buses.append(bus)
-
 	#initialize priorityDict to be key = name, value = priority heuristic
 	priorityDict = {}
 	for lst in adjlist:
@@ -77,8 +77,8 @@ def solver(G, k, s, L):
 		tempRowdies.append(L.copy())
 
 	stillRowdy = []
-	while not PQ.empty():
-		if len(buses[currBus]) <= s:
+	while not PQ.empty() and PQ.qsize() > emptyBuses:
+		if len(buses[currBus]) < s:
 			bus = buses[currBus]
 			tempRowdy = tempRowdies[currBus]
 			maxStudent = PQ.get()[2]
@@ -87,13 +87,17 @@ def solver(G, k, s, L):
 			#check if adding will form a rowdy group
 			violation = willBeRowdy(maxStudent, tempRowdy, currBus)
 			if not violation:
+				if len(bus) == 0:
+					emptyBuses -= 1
 				bus.append(maxStudent)
 				inBus = True
 			else:
 				violation = False
 				for j in range(currBus, len(buses)):
 					violation = willBeRowdy(maxStudent, tempRowdy, j)
-					if not violation:
+					if not violation and len(buses[j]) < s:
+						if len(buses[j]) == 0:
+							emptyBuses -= 1
 						buses[j].append(maxStudent)
 						inBus = True
 						# want to remove from the actual rowdy groups
@@ -103,6 +107,11 @@ def solver(G, k, s, L):
 					stillRowdy.append(maxStudent)
 		else:
 			currBus += 1
+
+	if PQ.qsize() == emptyBuses:
+		for bus in buses:
+			if len(bus) == 0:
+				bus.append(PQ.get()[2])
 
 	buses.sort() #sorting buses by length, so least capacity is first
 	counter = 0
