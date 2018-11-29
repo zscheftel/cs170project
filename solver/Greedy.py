@@ -1,6 +1,9 @@
 import networkx as nx
 import queue as Q
 
+solution = []
+buses = []
+currBus = 0 #counter for which bus you're currently trying to add to
 
 
 #calculate how many friends student1 has in the current bus
@@ -28,9 +31,6 @@ def willBeRowdy(student, currRowdy, busNum):
 
 #overall solver
 def solver(G, k, s, L):
-	solution = []
-	buses = []
-	currBus = 0 #counter for which bus you're currently trying to add to
 	G = G.remove_edges_from(G.selfloop_edges())
 	adjlist = nx.generate_adjlist(G) #adjlist is a list of strings
 	#initialize buses list
