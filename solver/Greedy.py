@@ -4,7 +4,6 @@ import math
 
 global solution, buses, currBus
 solution = []
-friendsRemaining = []
 #initialFriends = []
 
 #calculate how many friends student1 has in the current bus
@@ -30,7 +29,7 @@ def willBeRowdy(student, currRowdy, busNum):
 
 #iterate through priority queue and dictionary and basically update everything whenever
 #a student is successfully added to a bus
-def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist):
+def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining):
 	#remove all entries from PQ and add them into list
 	while not PQ.empty():
 		entries = []
@@ -41,22 +40,25 @@ def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist):
 		studentIndex = entry[1]
 		#all of the following are needed to calculate the priority
 		friendsInGraph = friendsRemaining[studentIndex] #total number of friends remaining in the Graph
+		# print("KEY")
+		# print(key)
+		# print("GRAPH")
+		# print(adjlist)
+		# print("BUSES")
+		# print(buses)
+		# print("WHICH BUS")
+		# print(currBus)
 		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
 		spotsRemaining = s - len(buses[currBus])
-
+		print(friendsInGraph)
 		# #bug in priority stuff but will fix this when building updatePriorities
 		# if spotsRemaining == 0:
 		# 	break
-
-		print(friendsOnCurrentBus)
-		print(spotsRemaining)
-		print(friendsInGraph)
 		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
 		priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
 
 		#add new entry
 		newEntry = (priority, studentIndex, key)
-		print(newEntry)
 		PQ.put(newEntry)
 
 
@@ -78,29 +80,29 @@ def solver(G, k, s, L):
 	#initialize priorityDict to be key = name, value = priority heuristic
 	priorityDict = {}
 
+	friendsRemaining = []
 	#have a list to keep track of how many friends each student has remaining in the graph
-	for i in range(len(adjlist)):
-		friendsRemaining.append([])
+	# for i in range(len(adjlist)):
+	# 	friendsRemaining.append([])
 
-	studentIndex = 0
+	# studentIndex = 0
 	for lst in adjlist:
 		key = lst.split(' ')[0]
 		#all of the following are needed to calculate the priority
 		friendsInGraph = len(lst.split(' ')) - 1 #total number of friends remaining in the Graph
-		friendsRemaining[studentIndex] = friendsInGraph
-		studentIndex += 1
+		#print(friendsInGraph)
+		friendsRemaining.append(friendsInGraph)
+		# studentIndex += 1
 		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
 		spotsRemaining = s
-
+		print(friendsRemaining)
 		# #bug in priority stuff but will fix this when building updatePriorities
 		# if spotsRemaining == 0:
 		# 	break
-
 		totalStudents = len(adjlist)
 		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
 		priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
 		priorityDict[key] = priority
-
 	#add dictionary entries to a priority queue
 	PQ = Q.PriorityQueue()
 	tiebreaker = 0 #arbitrary counter to break ties if entries have the same priority
@@ -137,7 +139,7 @@ def solver(G, k, s, L):
 
 				#actually remove student from graph and reset adjacency list
 
-				updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist)
+				updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
 				inBus = True
 			else:
 				violation = False
@@ -147,7 +149,7 @@ def solver(G, k, s, L):
 						if len(buses[j]) == 0:
 							emptyBuses -= 1
 						buses[j].append(maxStudent)
-						updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist)
+						updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
 						inBus = True
 						# want to remove from the actual rowdy groups
 						for rowdy in L:
