@@ -15,6 +15,15 @@ def findFriendsOnCurrentBus(student1):
                 friendsOnBus += 1
     return friendsOnBus
 
+#check if adding student to the current bus giving the current Rowdy lists will form a rowdy group, returns a boolean
+def willBeRowdy(student, currRowdy, busNum):
+    for rowdy in currRowdy:
+        rowdy.remove(student)
+        if len(rowdy) == 0:
+            rowdy.add(student)
+            return True
+        return False
+
 #iterate through priority queue and dictionary and basically update everything whenever
 #a student is successfully added to a bus
 def updatePriorities():
@@ -49,9 +58,33 @@ def solver(G, k, s, L):
         PQ.put(entry)
         tiebreaker += 1
 
-    #iterate through until PQ is empty, each time adding the max student either to a bus or to "stillRowdy"
-    while not PQ.empty():
-        maxStudent = PQ.get() #retrieve max student from PQ, also removes this student from the PQ
+    bus = buses[currBus]
+    while len(bus) < s:
+        tempRowdy = L.copy()
+
+        #iterate through until PQ is empty, each time adding the max student either to a bus or to "stillRowdy"
+        while not PQ.empty():
+            maxStudent = PQ.get() #retrieve max student from PQ, also removes this student from the PQ
+            inBus = False
+            violation = False
+            #check if adding will form a rowdy group
+            violation = willBeRowdy(maxStudent, tempRowdy, currBus)
+            if not violation:
+                bus.append(maxStudent)
+                inBus = True
+            else:
+                violation = False
+                #for each additional bus, check if forms rowdy group
+                #NOTE: maybe we need to form a tempRowdy for each bus and then refer back to them, that way
+                #we don't need to generate a new tempRowdy every time we look at a different bus
+                #and we need separate tempRowdy groups for each bus b/c each bus has different people we've
+                #removed from tempRowdy so far
+                for j in range(currBus, len(buses)):
+                    violation = willBeRowdy(maxStudent, tempRowdy, j)
+                        
+
+        currBus += 1
+
 
 
 
