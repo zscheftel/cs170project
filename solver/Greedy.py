@@ -3,15 +3,30 @@ import queue as Q
 
 solution = []
 buses = []
-currBus = 0 #counter for which bus you're currently trying to add to
+currBus #counter for which bus you're currently trying to add to
 adjlist = nx.generate_adjlist(G) #adjlist is a list of strings
 
-def solver(G, k, s, L):
+#calculate how many friends student1 has in the current bus
+def findFriendsOnCurrentBus(student1):
+    friendsOnBus = 0
+    for student2 in buses[currBus]:
+        for list in adjlist:
+            if (list.split(' ')[0] == student1) and (student2 in list):
+                friendsOnBus += 1
+    return friendsOnBus
 
+#iterate through priority queue and dictionary and basically update everything whenever
+#a student is successfully added to a bus
+def updatePriorities():
+
+
+#overall solver
+def solver(G, k, s, L):
     #initialize buses list
     for i in range(0, k):
         bus = []
         buses.append(bus)
+    currBus = 0 #initialize currBus counter to start at 0
 
     #initialize priorityDict to be key = name, value = priority heuristic
     priorityDict = {}
@@ -22,17 +37,25 @@ def solver(G, k, s, L):
         friendsOnCurrentBus = findFriendsOnCurrentBus(key)
         spotsRemaining = s - len(buses[currBus])
         totalStudents = len(adjlist)
-        priority = friendsOnCurrentBus*(s/spotsRemaining)*math.log(totalStudents, 2) + friendsInGraph
+        priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
+        priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
         priorityDict[key] = priority
 
-    
+    #add dictionary entries to a priority queue
+    PQ = Q.PriorityQueue()
+    tiebreaker = 0 #arbitrary counter to break ties if entries have the same priority
+    for key in priorityDict.keys():
+        entry = (priorityDict[key], tiebreaker, key)
+        PQ.put(entry)
+        tiebreaker += 1
 
-def findFriendsOnCurrentBus(student1):
-    friendsOnBus = 0
-    for student2 in buses[currBus]:
-        for list in adjlist:
-            if (list.split(' ')[0] == student1) and (student2 in list):
-                friendsOnBus += 1
+    #iterate through until PQ is empty, each time adding the max student either to a bus or to "stillRowdy"
+    while not PQ.empty():
+        maxStudent = PQ.get() #retrieve max student from PQ, also removes this student from the PQ
+
+
+
+
 
 
 
