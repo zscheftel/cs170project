@@ -1,10 +1,10 @@
 import networkx as nx
-from Greedy import solver
+from zackFunction import solver
 import os
 from pathlib import Path
 import ast
 
-path = "/Users/maxyun/Documents/cs170/project/all_inputs/small/"
+path = "/Users/Gabrielle/Documents/cs170/all_inputs/small/"
 solution = []
 
 #writes solution to output files
@@ -36,7 +36,7 @@ def scoreSolution(G, rG_sets):
                     for friends in adjlist:
                         if str(i) in friends and str(j) in friends:
                             score += 1
-                            
+
 for folder in os.listdir(path):
     if folder.endswith(".DS_Store"):
         continue

@@ -115,7 +115,9 @@ import random
 # splitSupernode("1,2,3")
 # print(G.nodes, G.edges)
 
-def solver(graph, k, s, rG, filename):
+def solver(graph, k, s, rG):
+    k = int(k)
+    s = int(s)
 
     def randomized():
         buses = [[] for i in range(k)]
@@ -220,8 +222,9 @@ def solver(graph, k, s, rG, filename):
                 placeLeftover()
 
         buses = [x.split(',') for x in list(G.nodes)]
+        #print(buses)
         return buses
 
     return randomized()
 
-print(solver(G, k, s, rG, filename))
+#print(solver(G, k, s, rG, filename))

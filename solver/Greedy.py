@@ -4,12 +4,9 @@ import math
 
 global solution, buses, currBus
 solution = []
-buses = []
-currBus = 0 #counter for which bus you're currently trying to add to
-
 
 #calculate how many friends student1 has in the current bus
-def findFriendsOnCurrentBus(student1, adjlist):
+def findFriendsOnCurrentBus(student1, adjlist, buses, currBus):
 	friendsOnBus = 0
 	for student2 in buses[currBus]:
 		for lst in adjlist:
@@ -38,15 +35,15 @@ def willBeRowdy(student, currRowdy, busNum):
 def solver(G, k, s, L):
 	k = int(k)
 	s = int(s)
-	currBus = 0
 	G.remove_edges_from(G.selfloop_edges())
 	adjlist = list(nx.generate_adjlist(G)) #adjlist is a list of strings
 
 	#initialize buses list
+	buses = []
+	currBus = 0 #counter for which bus you're currently trying to add to
 	for i in range(0, k):
 		bus = []
 		buses.append(bus)
-	# currBus = 0 #initialize currBus counter to start at 0
 
 	#initialize priorityDict to be key = name, value = priority heuristic
 	priorityDict = {}
@@ -54,8 +51,13 @@ def solver(G, k, s, L):
 		key = lst.split(' ')[0]
 		#all of the following are needed to calculate the priority
 		friendsInGraph = len(lst.split(' ')) - 1 #total number of friends remaining in the Graph
-		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist)
+		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
 		spotsRemaining = s - len(buses[currBus])
+
+		#bug in priority stuff but will fix this when building updatePriorities
+		if spotsRemaining == 0:
+			break
+
 		totalStudents = len(adjlist)
 		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
 		priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
