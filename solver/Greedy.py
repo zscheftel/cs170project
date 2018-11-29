@@ -1,28 +1,33 @@
 import networkx as nx
 import queue as Q
+import math
 
+global solution, buses, currBus
 solution = []
 buses = []
 currBus = 0 #counter for which bus you're currently trying to add to
 
 
 #calculate how many friends student1 has in the current bus
-def findFriendsOnCurrentBus(student1):
+def findFriendsOnCurrentBus(student1, adjlist):
 	friendsOnBus = 0
 	for student2 in buses[currBus]:
-		for list in adjlist:
-			if (list.split(' ')[0] == student1) and (student2 in list):
+		for lst in adjlist:
+			if (lst.split(' ')[0] == student1) and (student2 in lst):
 				friendsOnBus += 1
 	return friendsOnBus
 
 #check if adding student to the current bus giving the current Rowdy lists will form a rowdy group, returns a boolean
 def willBeRowdy(student, currRowdy, busNum):
 	for rowdy in currRowdy:
-		rowdy.remove(student)
-		if len(rowdy) == 0:
-			rowdy.add(student)
-			return True
-		return False
+		try:
+			rowdy.remove(student)
+			if len(rowdy) == 0:
+				rowdy.append(student)
+				return True
+		except ValueError:
+			continue
+	return False
 
 #iterate through priority queue and dictionary and basically update everything whenever
 #a student is successfully added to a bus
@@ -31,8 +36,12 @@ def willBeRowdy(student, currRowdy, busNum):
 
 #overall solver
 def solver(G, k, s, L):
-	G = G.remove_edges_from(G.selfloop_edges())
-	adjlist = nx.generate_adjlist(G) #adjlist is a list of strings
+	k = int(k)
+	s = int(s)
+	currBus = 0
+	G.remove_edges_from(G.selfloop_edges())
+	adjlist = list(nx.generate_adjlist(G)) #adjlist is a list of strings
+
 	#initialize buses list
 	for i in range(0, k):
 		bus = []
@@ -41,11 +50,11 @@ def solver(G, k, s, L):
 
 	#initialize priorityDict to be key = name, value = priority heuristic
 	priorityDict = {}
-	for list in adjlist:
-		key = list.split(' ')[0]
+	for lst in adjlist:
+		key = lst.split(' ')[0]
 		#all of the following are needed to calculate the priority
-		friendsInGraph = len(list.split(' ')) - 1 #total number of friends remaining in the Graph
-		friendsOnCurrentBus = findFriendsOnCurrentBus(key)
+		friendsInGraph = len(lst.split(' ')) - 1 #total number of friends remaining in the Graph
+		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist)
 		spotsRemaining = s - len(buses[currBus])
 		totalStudents = len(adjlist)
 		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
@@ -60,17 +69,17 @@ def solver(G, k, s, L):
 		PQ.put(entry)
 		tiebreaker += 1
 
-    #make one copy of rowdy groups that corresponds to each bus
-    tempRowdies = []
-    for i in range(0, k):
-        tempRowdies.append(L.copy())
+	#make one copy of rowdy groups that corresponds to each bus
+	tempRowdies = []
+	for i in range(0, k):
+		tempRowdies.append(L.copy())
 
 	stillRowdy = []
 	while not PQ.empty():
 		if len(buses[currBus]) < s:
-            bus = buses[currBus]
+			bus = buses[currBus]
 			tempRowdy = tempRowdies[currBus]
-			maxStudent = PQ.get()
+			maxStudent = PQ.get()[2]
 			inBus = False
 			violation = False
 			#check if adding will form a rowdy group

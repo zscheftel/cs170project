@@ -2,10 +2,10 @@ import networkx as nx
 from Greedy import solver
 import os
 from pathlib import Path
+import ast
 
 path = "/Users/maxyun/Documents/cs170/project/all_inputs/small/"
 solution = []
-
 
 #writes solution to output files
 def createOutputs(filename, num, solution):
@@ -37,31 +37,32 @@ def scoreSolution(G, rG_sets):
                         if str(i) in friends and str(j) in friends:
                             score += 1
                             
-    print(score)
-
 for folder in os.listdir(path):
     if folder.endswith(".DS_Store"):
         continue
+    G = None
+    k = None
+    s = None
+    rG = []
     for filename in os.listdir(path + folder):
-        G = None
-        k = None
-        s = None
-        rG = []
-
         src = path + folder + "/" + filename
-
         if src.endswith(".gml"):
             G = nx.read_gml(src)
-        elif src.endswith(".txt"):
+
+        if src.endswith(".txt"):
             file = open(src, 'r')
             lines = file.readlines()
             k = lines[0]
             s = lines[1]
-            rG.extend(lines[2:])
+            # lines[2:] is a list of strings where the strings look like lists
+            # eg. ["[1, 2]", "[3, 4"]]
+            for group in lines[2:]:
+                # the below converts a string that looks like a list into an actual list
+                # eg. "[1, 2]" -> [1, 2]
+                group = ast.literal_eval(group)
+                rG.append(group)
             file.close()
-
         if G is not None and k is not None:
-            print("hi")
             rG_sets = [set(x) for x in rG]
 
             #Call solver function to write to solution global var
