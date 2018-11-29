@@ -1,5 +1,50 @@
 import networkx as nx
+import queue as Q
+
 solution = []
+buses = []
+currBus = 0 #counter for which bus you're currently trying to add to
+adjlist = nx.generate_adjlist(G) #adjlist is a list of strings
+
+def solver(G, k, s, L):
+
+    #initialize buses list
+    for i in range(0, k):
+        bus = []
+        buses.append(bus)
+
+    #initialize priorityDict to be key = name, value = priority heuristic
+    priorityDict = {}
+    for list in adjlist:
+        key = list.split(' ')[0]
+        #all of the following are needed to calculate the priority
+        friendsInGraph = len(list.split(' ')) - 1 #total number of friends remaining in the Graph
+        friendsOnCurrentBus = findFriendsOnCurrentBus(key)
+        spotsRemaining = s - len(buses[currBus])
+        totalStudents = len(adjlist)
+        priority = friendsOnCurrentBus*(s/spotsRemaining)*math.log(totalStudents, 2) + friendsInGraph
+        priorityDict[key] = priority
+
+    
+
+def findFriendsOnCurrentBus(student1):
+    friendsOnBus = 0
+    for student2 in buses[currBus]:
+        for list in adjlist:
+            if (list.split(' ')[0] == student1) and (student2 in list):
+                friendsOnBus += 1
+
+
+
+
+
+
+
+
+
+
+
+
 
 def solver(G, k, s, L): #k = number of buses, s = capacity of buses, L = list of lists of rowdy groups
     #adjlist is a list of strings
@@ -24,6 +69,7 @@ def solver(G, k, s, L): #k = number of buses, s = capacity of buses, L = list of
 
     #retrieve kid w/ max # of friends and keep adding until first bus full and then next bus
     #unless adding the max kid creatse a rowdy group: else iterate through next buses, keep trying
+
     for i in range(len(buses)):
         bus = buses[i]
         while len(bus) < s:
