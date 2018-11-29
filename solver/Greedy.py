@@ -76,7 +76,7 @@ def solver(G, k, s, L):
 
 	stillRowdy = []
 	while not PQ.empty():
-		if len(buses[currBus]) < s:
+		if len(buses[currBus]) <= s:
 			bus = buses[currBus]
 			tempRowdy = tempRowdies[currBus]
 			maxStudent = PQ.get()[2]
