@@ -118,6 +118,7 @@ import random
 def solver(graph, k, s, rG):
     k = int(k)
     s = int(s)
+    graph.remove_edges_from(graph.selfloop_edges())
 
     def randomized():
         buses = [[] for i in range(k)]
@@ -150,6 +151,28 @@ def solver(graph, k, s, rG):
             for node in list(G.nodes):
                 if v in node.split(','):
                     return node
+
+        def combineEdges():
+            counter = len(list(G.nodes)) // 10
+            while len(list(G.edges)) != 0 and counter > 0:
+                edgeList = list(G.edges)
+                randEdge = edgeList[random.randint(0, len(edgeList)-1)] #Find random edge
+
+                v1, v2 = randEdge[0], randEdge[1]
+                sizeV1, sizeV2 = len(v1.split(',')), len(v2.split(','))
+                subset = False
+
+                for rG_set in rG_sets: #check if a rowdy group is created
+                    vTot = v1 + v2
+                    if all(x in (vTot).split(',') for x in rG_set):
+                        subset = True
+                    if subset:
+                        break
+
+                if not (sizeV1 + sizeV2 > s) and not subset: #neither overfull bus nor rowdy group
+                    createSupernode(v1, v2)
+                else:
+                    counter -= 1
 
         def placeLeftover():
             if (len(list(G.nodes)) <= k):
@@ -191,35 +214,13 @@ def solver(graph, k, s, rG):
                             break
                     createSupernode(boi, superNodes[currStudentCount[curr][0]])
 
-        while len(list(G.nodes)) > k: #try to create supernodes by combining edge members
+        if len(list(G.nodes)) > k:
 
-            if len(list(G.edges)) != 0:
-                edgeList = list(G.edges)
-                randEdge = edgeList[random.randint(0, len(edgeList)-1)] #Find random edge
+            if len(list(G.edges)) != 0: #try to create supernodes by combining edge members
+                combineEdges()
 
-                v1 = randEdge[0]
-                sizeV1 = len(v1.split(','))
-                v2 = randEdge[1]
-                sizeV2 = len(v2.split(','))
-
-                #try to add nodes to each bus
-                if (sizeV1 + sizeV2 > s): #overfull bus
-                    continue
-
-                subset = False
-
-                for rG_set in rG_sets: #check if a rowdy group is created
-                    vTot = v1 + v2
-                    if all(x in (vTot).split(',') for x in rG_set):
-                        subset = True
-                        break
-                if subset:
-                    continue
-
-                createSupernode(v1, v2)
-
-            else: #if we have leftover nodes after combining edges, we must place them
-                placeLeftover()
+            #if we have leftover nodes after combining edges, we must place them
+            placeLeftover()
 
         buses = [x.split(',') for x in list(G.nodes)]
         #print(buses)
