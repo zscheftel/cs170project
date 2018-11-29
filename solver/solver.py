@@ -1,12 +1,15 @@
 import networkx as nx
+from Greedy import solver
+import os
+from pathlib import Path
 
-path = "/../inputs/"
+path = "/Users/maxyun/Documents/cs170/project/all_inputs/small/"
 solution = []
 
 
 #writes solution to output files
-def createOutputs(filename):
-    f = open("small/" + filename + ".out", "w")
+def createOutputs(filename, num, solution):
+    f = open(filename + "/" + num + ".out", "w")
     for i in solution:
         f.write(str(i) + "\n")
     f.close()
@@ -36,31 +39,36 @@ def scoreSolution(G, rG_sets):
                             
     print(score)
 
-
 for folder in os.listdir(path):
-    for filename in os.listdir(folder):
+    if folder.endswith(".DS_Store"):
+        continue
+    for filename in os.listdir(path + folder):
         G = None
         k = None
         s = None
         rG = []
 
-        if filename.endswith(".gml"):
-            G = nx.read_gml(filename)
-        elif filename.endswith(".txt"):
-            file = open(filename, 'r')
+        src = path + folder + "/" + filename
+
+        if src.endswith(".gml"):
+            G = nx.read_gml(src)
+        elif src.endswith(".txt"):
+            file = open(src, 'r')
             lines = file.readlines()
             k = lines[0]
             s = lines[1]
             rG.extend(lines[2:])
             file.close()
 
-        rG_sets = [set(x) for x in rG]
+        if G is not None and k is not None:
+            print("hi")
+            rG_sets = [set(x) for x in rG]
 
-        #Call solver function to write to solution global var
-        solver(G, k, s, rG)
+            #Call solver function to write to solution global var
+            solution = solver(G, k, s, rG)
 
-        #Write output files based on solution
-        createOutputs(filename)
+            #Write output files based on solution
+            createOutputs(os.getcwd() + "/outputs", folder, solution)
 
-        #Print score for this solution
-        scoreSolution(G, rG_sets)
+            #Print score for this solution
+            scoreSolution(G, rG_sets)
