@@ -1,10 +1,22 @@
 import networkx as nx
-from zackFunction import solver
+from Greedy import solver
 import os
 from pathlib import Path
 import ast
 
-path = "/Users/Gabrielle/Documents/cs170/all_inputs/small/"
+p = os.getcwd()
+small = True
+medium = False
+large = False
+
+if small:
+    inputsSize = "small/"
+elif medium:
+    inputsSize = "medium/"
+elif large:
+    inputsSize = "large/"
+
+path = p + "/all_inputs/" + inputsSize
 solution = []
 
 #writes solution to output files
