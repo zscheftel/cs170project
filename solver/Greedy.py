@@ -23,7 +23,7 @@ def willBeRowdy(student, currRowdy, busNum):
 
 #iterate through priority queue and dictionary and basically update everything whenever
 #a student is successfully added to a bus
-# def updatePriorities():
+#def updatePriorities():
 
 
 #overall solver
@@ -60,41 +60,16 @@ def solver(G, k, s, L):
 		PQ.put(entry)
 		tiebreaker += 1
 
-	bus = buses[currBus]
+    #make one copy of rowdy groups that corresponds to each bus
+    tempRowdies = []
+    for i in range(0, k):
+        tempRowdies.append(L.copy())
 
-	"""
-	# Gabby's stuff
-	while len(bus) < s:
-		tempRowdy = L.copy()
-
-		#iterate through until PQ is empty, each time adding the max student either to a bus or to "stillRowdy"
-		while not PQ.empty():
-			maxStudent = PQ.get() #retrieve max student from PQ, also removes this student from the PQ
-			inBus = False
-			violation = False
-			#check if adding will form a rowdy group
-			violation = willBeRowdy(maxStudent, tempRowdy, currBus)
-			if not violation:
-				bus.append(maxStudent)
-				inBus = True
-			else:
-				violation = False
-				#for each additional bus, check if forms rowdy group
-				#NOTE: maybe we need to form a tempRowdy for each bus and then refer back to them, that way
-				#we don't need to generate a new tempRowdy every time we look at a different bus
-				#and we need separate tempRowdy groups for each bus b/c each bus has different people we've
-				#removed from tempRowdy so far
-				for j in range(currBus, len(buses)):
-					violation = willBeRowdy(maxStudent, tempRowdy, j)
-					
-		currBus += 1
-	"""
-
-	# Max's stuff
 	stillRowdy = []
 	while not PQ.empty():
 		if len(buses[currBus]) < s:
-			tempRowdy = L.copy()
+            bus = buses[currBus]
+			tempRowdy = tempRowdies[currBus]
 			maxStudent = PQ.get()
 			inBus = False
 			violation = False
@@ -107,20 +82,18 @@ def solver(G, k, s, L):
 				violation = False
 				for j in range(currBus, len(buses)):
 					violation = willBeRowdy(maxStudent, tempRowdy, j)
-					
-					# Max's stuff -- unsure about the tempRowdy thing
 					if not violation:
 						buses[j].append(maxStudent)
-						inBus = true
+						inBus = True
 						# want to remove from the actual rowdy groups
 						for rowdy in L:
-							L.remove(maxStudent)
+							tempRowdy.remove(maxStudent)
 				if not inBus:
 					stillRowdy.append(maxStudent)
 		else:
 			currBus += 1
 
-	buses.sort()
+	buses.sort() #sorting buses by length, so least capacity is first
 	counter = 0
 	while len(stillRowdy) != 0:
 		if len(buses[counter]) < s:
