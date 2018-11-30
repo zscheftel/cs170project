@@ -117,7 +117,6 @@ def score_output(input_folder, output_file):
             score += 1
     score = score / total_edges
 
-
     return score, "Valid output submitted with score: {}".format(score)
 
 # if __name__ == '__main__':
@@ -126,6 +125,7 @@ def score_output(input_folder, output_file):
 
 
 for folder in os.listdir(path):
+    totalscore = 0
     if folder.endswith(".DS_Store"):
         continue
     G = None
@@ -150,6 +150,7 @@ for folder in os.listdir(path):
                 group = ast.literal_eval(group)
                 rG.append(group)
             file.close()
+
         if G is not None and k is not None:
             rG_sets = [set(x) for x in rG]
 
@@ -160,12 +161,15 @@ for folder in os.listdir(path):
             createOutputs(outputPath, folder, solution)
 
             #Print score for this solution
-            #print(score_output(path + folder, outputPath + folder + ".out"))
+            print(score_output(path + folder, outputPath + folder + ".out"))
+
+            totalscore += (score_output(path + folder, outputPath + folder + ".out"))[0]
 
             #Print counter of how many we've processed
             #print(counter)
             counter += 1
 
+print(totalscore / counter)
 
 # # FOR TESTING A SINGLE INPUT
 # G = None

@@ -37,34 +37,35 @@ def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemai
 	#iterate through list and add back into PQ
 	for entry in entries:
 		key = entry[2]
+		#print(entry)
 		studentIndex = entry[1]
 		#all of the following are needed to calculate the priority
 		friendsInGraph = friendsRemaining[studentIndex] #total number of friends remaining in the Graph
-		# print("KEY")
-		# print(key)
-		# print("GRAPH")
-		# print(adjlist)
-		# print("BUSES")
-		# print(buses)
-		# print("WHICH BUS")
-		# print(currBus)
+		#print("Total Friends: " + str(friendsInGraph))
 		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
+		#print("Friends on Bus: " + str(friendsOnCurrentBus))
+		#print("Current Bus: " + str(buses[currBus]))
 		spotsRemaining = s - len(buses[currBus])
-		print(s)
+		#print("s: " + str(s))
 		# #bug in priority stuff but will fix this when building updatePriorities
 		# if spotsRemaining == 0:
 		# 	break
-		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
-		priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
-		#add new entry
-		newEntry = (priority, studentIndex, key)
-		PQ.put(newEntry)
+		if spotsRemaining == 0:
+			PQ.put(entry)
+		else:
+			priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
+			priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
+			#add new entry
+			newEntry = (priority, studentIndex, key)
+			PQ.put(newEntry)
 
 
 #overall solver
 def solver(G, k, s, L):
 	k = int(k)
 	s = int(s)
+	#print(k)
+	#print(s)
 
 	G.remove_edges_from(G.selfloop_edges())
 	adjlist = list(nx.generate_adjlist(G)) #adjlist is a list of strings
@@ -118,6 +119,8 @@ def solver(G, k, s, L):
 
 	stillRowdy = []
 	counter = totalStudents
+
+	#print(buses)
 	while counter > emptyBuses:
 		#print(counter)
 	#while not PQ.empty() and PQ.qsize() > emptyBuses:
@@ -126,34 +129,39 @@ def solver(G, k, s, L):
 			# #print("less than 28")
 			# print(len(buses[currBus]))
 			# print("bus: ", currBus)
-			print(s)
+			#print(s)
 
 			bus = buses[currBus]
 			tempRowdy = tempRowdies[currBus]
 			maxStudent = PQ.get()[2]
+			# print(maxStudent)
+			# print("made it this far")
+
 			inBus = False
 			violation = False
 			#check if adding will form a rowdy group
 			violation = willBeRowdy(maxStudent, tempRowdy, currBus)
 			if not violation:
+				#print("I stopped at a nonviolation loop")
 				if len(bus) == 0:
 					emptyBuses -= 1
 				bus.append(maxStudent)
-
 				# for lst in adjlist:
 				# 	if key == lst.split(' ')[0]:
 				# 		if maxStudent in lst:
 				# 			friendsRemaining[] -= 1
 
-
+				empty = False
 				#actually remove student from graph and reset adjacency list
-				try:
-					updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
-				except ZeroDivisionError:
-					continue
+				# print("nonviolation before update:")
+				# print(PQ.queue)
+				updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+				# print(empty)
+				# print("nonviolation after update:")
+				# print(PQ.queue)
 				inBus = True
-				#print("lol")
 			else:
+				#print("I stopped at a violation (rowdy) loop")
 				violation = False
 				for j in range(currBus, len(buses)):
 					violation = willBeRowdy(maxStudent, tempRowdy, j)
@@ -161,21 +169,30 @@ def solver(G, k, s, L):
 						if len(buses[j]) == 0:
 							emptyBuses -= 1
 						buses[j].append(maxStudent)
-						try:
-							updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
-						except ZeroDivisionError:
-							continue
+						# print("violation before update:")
+						# print(PQ.queue)
+						updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+						# print("violation after update:")
+						# print(PQ.queue)
 						inBus = True
 						# want to remove from the actual rowdy groups
 						for rowdy in L:
 							tempRowdy.remove(maxStudent)
 				if not inBus:
+					#print("I stopped at a stillRowdy loop")
 					stillRowdy.append(maxStudent)
-		else:
+		if len(buses[currBus]) >= s:
+			#print("i got to this loop!!!")
 			currBus += 1
+			# print(currBus)
+			# print("length of current bus: " + str(len(buses[currBus])))
+			# print("s: " + str(s))
 
-		#print(buses)
+		#print("got to counter loop???")
 		counter -= 1
+		# print("counter: " + str(counter))
+		# print("EmptyBuses: " + str(emptyBuses))
+		# print(PQ.queue)
 
 	#if PQ.qsize() == emptyBuses:
 	for bus in buses:
@@ -190,6 +207,7 @@ def solver(G, k, s, L):
 		else:
 			counter += 1
 
+	#print(buses)
 	return buses
 
 
