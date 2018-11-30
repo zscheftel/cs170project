@@ -31,8 +31,8 @@ def willBeRowdy(student, currRowdy, busNum):
 #a student is successfully added to a bus
 def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining):
 	#remove all entries from PQ and add them into list
+	entries = []
 	while not PQ.empty():
-		entries = []
 		entries.append(PQ.get())
 	#iterate through list and add back into PQ
 	for entry in entries:
@@ -50,13 +50,11 @@ def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemai
 		# print(currBus)
 		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
 		spotsRemaining = s - len(buses[currBus])
-		print(friendsInGraph)
 		# #bug in priority stuff but will fix this when building updatePriorities
 		# if spotsRemaining == 0:
 		# 	break
 		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
 		priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
-
 		#add new entry
 		newEntry = (priority, studentIndex, key)
 		PQ.put(newEntry)
@@ -86,6 +84,8 @@ def solver(G, k, s, L):
 	# 	friendsRemaining.append([])
 
 	# studentIndex = 0
+	totalStudents = len(adjlist)
+
 	for lst in adjlist:
 		key = lst.split(' ')[0]
 		#all of the following are needed to calculate the priority
@@ -95,11 +95,9 @@ def solver(G, k, s, L):
 		# studentIndex += 1
 		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
 		spotsRemaining = s
-		print(friendsRemaining)
 		# #bug in priority stuff but will fix this when building updatePriorities
 		# if spotsRemaining == 0:
 		# 	break
-		totalStudents = len(adjlist)
 		priority = friendsOnCurrentBus * (s / spotsRemaining) * math.log(totalStudents, 2) + friendsInGraph
 		priority = (-1) * priority #PQ in python sorts by min. priority; since we want max. priority, make negative
 		priorityDict[key] = priority
@@ -117,7 +115,10 @@ def solver(G, k, s, L):
 		tempRowdies.append(L.copy())
 
 	stillRowdy = []
-	while not PQ.empty() and PQ.qsize() > emptyBuses:
+	counter = totalStudents
+	while counter > emptyBuses:
+	#while not PQ.empty() and PQ.qsize() > emptyBuses:
+		PQCopy = PQ
 		if len(buses[currBus]) < s:
 			bus = buses[currBus]
 			tempRowdy = tempRowdies[currBus]
@@ -138,8 +139,10 @@ def solver(G, k, s, L):
 
 
 				#actually remove student from graph and reset adjacency list
-
-				updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+				try:
+					updatePriorities(PQCopy, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+				except ZeroDivisionError:
+					break
 				inBus = True
 			else:
 				violation = False
@@ -149,7 +152,10 @@ def solver(G, k, s, L):
 						if len(buses[j]) == 0:
 							emptyBuses -= 1
 						buses[j].append(maxStudent)
-						updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+						try:
+							updatePriorities(PQCopy, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+						except ZeroDivisionError:
+							print("hi")
 						inBus = True
 						# want to remove from the actual rowdy groups
 						for rowdy in L:
@@ -158,6 +164,8 @@ def solver(G, k, s, L):
 					stillRowdy.append(maxStudent)
 		else:
 			currBus += 1
+		print(buses)	
+		counter -= 1
 
 	if PQ.qsize() == emptyBuses:
 		for bus in buses:

@@ -25,7 +25,7 @@ elif large:
 path = p + "/all_inputs/" + inputsSize
 outputPath = p + "/outputs/" + inputsSize
 # for testing purposes
-# path = p + "/all_inputs/small/1/"
+# path = p + "/all_inputs/small/2/"
 
 solution = []
 
@@ -197,7 +197,4 @@ for folder in os.listdir(path):
 #         solution = solver(G, k, s, rG)
 
 #         #Write output files based on solution
-#         createOutputs(p + "/outputs", "1", solution, G)
-
-#         #Print score for this solution
-        # print(scoreSolution(G, rG_sets))
+#         createOutputs(p + "/outputs", "2", solution)
