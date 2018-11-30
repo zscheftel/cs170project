@@ -50,6 +50,7 @@ def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemai
 		# print(currBus)
 		friendsOnCurrentBus = findFriendsOnCurrentBus(key, adjlist, buses, currBus)
 		spotsRemaining = s - len(buses[currBus])
+		print(s)
 		# #bug in priority stuff but will fix this when building updatePriorities
 		# if spotsRemaining == 0:
 		# 	break
@@ -64,6 +65,7 @@ def updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemai
 def solver(G, k, s, L):
 	k = int(k)
 	s = int(s)
+
 	G.remove_edges_from(G.selfloop_edges())
 	adjlist = list(nx.generate_adjlist(G)) #adjlist is a list of strings
 	#initialFriends = adjlist
@@ -117,9 +119,15 @@ def solver(G, k, s, L):
 	stillRowdy = []
 	counter = totalStudents
 	while counter > emptyBuses:
+		#print(counter)
 	#while not PQ.empty() and PQ.qsize() > emptyBuses:
-		PQCopy = PQ
+		#PQCopy = PQ
 		if len(buses[currBus]) < s:
+			# #print("less than 28")
+			# print(len(buses[currBus]))
+			# print("bus: ", currBus)
+			print(s)
+
 			bus = buses[currBus]
 			tempRowdy = tempRowdies[currBus]
 			maxStudent = PQ.get()[2]
@@ -140,10 +148,11 @@ def solver(G, k, s, L):
 
 				#actually remove student from graph and reset adjacency list
 				try:
-					updatePriorities(PQCopy, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+					updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
 				except ZeroDivisionError:
-					break
+					continue
 				inBus = True
+				#print("lol")
 			else:
 				violation = False
 				for j in range(currBus, len(buses)):
@@ -153,9 +162,9 @@ def solver(G, k, s, L):
 							emptyBuses -= 1
 						buses[j].append(maxStudent)
 						try:
-							updatePriorities(PQCopy, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
+							updatePriorities(PQ, totalStudents, buses, currBus, s, adjlist, friendsRemaining)
 						except ZeroDivisionError:
-							print("hi")
+							continue
 						inBus = True
 						# want to remove from the actual rowdy groups
 						for rowdy in L:
@@ -164,13 +173,14 @@ def solver(G, k, s, L):
 					stillRowdy.append(maxStudent)
 		else:
 			currBus += 1
-		print(buses)	
+
+		#print(buses)
 		counter -= 1
 
-	if PQ.qsize() == emptyBuses:
-		for bus in buses:
-			if len(bus) == 0:
-				bus.append(PQ.get()[2])
+	#if PQ.qsize() == emptyBuses:
+	for bus in buses:
+		if len(bus) == 0:
+			bus.append(PQ.get()[2])
 
 	buses.sort() #sorting buses by length, so least capacity is first
 	counter = 0
