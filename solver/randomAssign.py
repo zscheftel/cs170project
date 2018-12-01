@@ -141,6 +141,8 @@ elif large:
 
 path = p + "/all_inputs/" + inputsSize
 outputPath = p + "/outputs/" + inputsSize
+tempPath = p + "/outputs/temp/" + inputsSize
+
 
 for folder in os.listdir(path):
     if folder.endswith(".DS_Store"):
@@ -171,19 +173,17 @@ for folder in os.listdir(path):
             rG_sets = [set(x) for x in rG]
 
             #Call solver function to write to solution global var
-            solution = []
-            score = 0
+            score = score_output(path + folder, outputPath + folder + ".out")[0]
 
             for i in range(iterations):
                 tempSolution = randomSolve(G, k, s, rG)
-                createOutputs(outputPath, folder, tempSolution)
-                tempScore = score_output(path + folder, outputPath + folder + ".out")[0]
+                createOutputs(tempPath, folder, tempSolution)
+                tempScore = score_output(path + folder, tempPath + folder + ".out")[0]
 
                 if tempScore > score:
                     score = tempScore
-                    solution = tempSolution
+                    createOutputs(outputPath, folder, tempSolution)
 
-            createOutputs(outputPath, folder, solution)
             print(score)
             total = total + score
 print("small avg, ", total / 331)
@@ -203,6 +203,8 @@ elif large:
 
 path = p + "/all_inputs/" + inputsSize
 outputPath = p + "/outputs/" + inputsSize
+tempPath = p + "/outputs/temp/" + inputsSize
+
 
 for folder in os.listdir(path):
     if folder.endswith(".DS_Store"):
@@ -233,19 +235,17 @@ for folder in os.listdir(path):
             rG_sets = [set(x) for x in rG]
 
             #Call solver function to write to solution global var
-            solution = []
-            score = 0
+            score = score_output(path + folder, outputPath + folder + ".out")[0]
 
             for i in range(iterations):
                 tempSolution = randomSolve(G, k, s, rG)
-                createOutputs(outputPath, folder, tempSolution)
-                tempScore = score_output(path + folder, outputPath + folder + ".out")[0]
+                createOutputs(tempPath, folder, tempSolution)
+                tempScore = score_output(path + folder, tempPath + folder + ".out")[0]
 
                 if tempScore > score:
                     score = tempScore
-                    solution = tempSolution
+                    createOutputs(outputPath, folder, tempSolution)
 
-            createOutputs(outputPath, folder, solution)
             print(score)
             total = total + score
 print("med avg, ", total / 331)
@@ -265,6 +265,7 @@ elif large:
 
 path = p + "/all_inputs/" + inputsSize
 outputPath = p + "/outputs/" + inputsSize
+tempPath = p + "/outputs/temp/" + inputsSize
 
 for folder in os.listdir(path):
     if folder.endswith(".DS_Store"):
@@ -295,19 +296,17 @@ for folder in os.listdir(path):
             rG_sets = [set(x) for x in rG]
 
             #Call solver function to write to solution global var
-            solution = []
-            score = 0
+            score = score_output(path + folder, outputPath + folder + ".out")[0]
 
             for i in range(iterations):
                 tempSolution = randomSolve(G, k, s, rG)
-                createOutputs(outputPath, folder, tempSolution)
-                tempScore = score_output(path + folder, outputPath + folder + ".out")[0]
+                createOutputs(tempPath, folder, tempSolution)
+                tempScore = score_output(path + folder, tempPath + folder + ".out")[0]
 
                 if tempScore > score:
                     score = tempScore
-                    solution = tempSolution
+                    createOutputs(outputPath, folder, tempSolution)
 
-            createOutputs(outputPath, folder, solution)
             print(score)
             total = total + score
 print("large avg, ", total / 331)
